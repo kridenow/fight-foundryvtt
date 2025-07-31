@@ -1,25 +1,24 @@
 {
-  "id": "cyphersystem",
-  "title": "Cypher System",
-  "description": "A flexible implementation of the Cypher System for Foundry VTT.",
-  "version": "3.3.2",
+  "id": "fight",
+  "title": "Fight!",
+  "description": "la version Touriste de Fight! pour Foundry VTT.",
+  "version": "1",
   "compatibility": {
     "minimum": "13",
     "verified": "13.346"
   },
-  "url": "https://github.com/mrkwnzl/cyphersystem-foundryvtt",
-  "manifest": "https://raw.githubusercontent.com/mrkwnzl/cyphersystem-foundryvtt/main/system.json",
-  "download": "https://github.com/mrkwnzl/cyphersystem-foundryvtt/releases/download/v3.3.2/release.zip",
+  "url": "https://github.com/kridenow/fight-foundryvtt",
+  "manifest": "https://raw.githubusercontent.com/kridenow/fight-foundryvtt/main/system.json",
+  "download": "https://github.com/kridenow/fight-foundryvtt/releases/download/v3.3.2/release.zip",
   "authors": [
     {
-      "name": "Marko Wenzel",
-      "discord": "mrkwnzl",
+      "name": "Pierre",
       "flags": {}
     }
   ],
-  "esmodules": ["module/cyphersystem.js"],
+  "esmodules": ["module/fight.js"],
   "styles": [
-    { "src": "css/cyphersystem.css" },
+    { "src": "css/fight.css" },
     { "src": "css/journals.css" },
     { "src": "css/tables.css" }
   ],
@@ -32,7 +31,7 @@
     {
       "name": "macros",
       "label": "Roll Macros",
-      "system": "cyphersystem",
+      "system": "fight",
       "path": "packs/roll-macros",
       "type": "Macro",
       "flags": {},
@@ -44,7 +43,7 @@
     {
       "name": "marker",
       "label": "Markers",
-      "system": "cyphersystem",
+      "system": "fight",
       "path": "packs/markers",
       "type": "Actor",
       "flags": {},
@@ -56,7 +55,7 @@
     {
       "name": "scenes",
       "label": "Scenes",
-      "system": "cyphersystem",
+      "system": "fight",
       "path": "packs/scenes",
       "type": "Scene",
       "flags": {},
@@ -68,7 +67,7 @@
     {
       "name": "utility-macros",
       "label": "Utility Macros",
-      "system": "cyphersystem",
+      "system": "fight",
       "path": "packs/utility-macros",
       "type": "Macro",
       "flags": {},
@@ -80,7 +79,7 @@
     {
       "name": "scripting-macros",
       "label": "Scripting Macros",
-      "system": "cyphersystem",
+      "system": "fight",
       "path": "packs/scripting-macros",
       "type": "Macro",
       "flags": {},
@@ -92,7 +91,7 @@
     {
       "name": "secret-settings",
       "label": "Secret Settings",
-      "system": "cyphersystem",
+      "system": "fight",
       "path": "packs/secret-settings",
       "type": "Macro",
       "flags": {},
