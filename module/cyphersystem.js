@@ -1,16 +1,16 @@
 // Import actors & items
-import {CypherActor} from "./actor/actor.js";
-import {CypherItem} from "./item/item.js";
+import {FightActor} from "./actor/actor.js";
+import {FightItem} from "./item/item.js";
 
 // Import actor & item sheets
-import {CypherItemSheet} from "./item/item-sheet.js";
-import {CypherActorSheet} from "./actor/actor-sheet.js";
-import {CypherActorSheetPC} from "./actor/pc-sheet.js";
-import {CypherActorSheetNPC} from "./actor/npc-sheet.js";
-import {CypherActorSheetCommunity} from "./actor/community-sheet.js";
-import {CypherActorSheetCompanion} from "./actor/companion-sheet.js";
-import {CypherActorSheetMarker} from "./actor/marker-sheet.js";
-import {CypherActorSheetVehicle} from "./actor/vehicle-sheet.js";
+import {FightItemSheet} from "./item/item-sheet.js";
+import {FightActorSheet} from "./actor/actor-sheet.js";
+import {FightActorSheetPC} from "./actor/pc-sheet.js";
+import {FightActorSheetNPC} from "./actor/npc-sheet.js";
+import {FightActorSheetCommunity} from "./actor/community-sheet.js";
+import {FightActorSheetCompanion} from "./actor/companion-sheet.js";
+import {FightActorSheetMarker} from "./actor/marker-sheet.js";
+import {FightActorSheetVehicle} from "./actor/vehicle-sheet.js";
 
 // Import utility functions
 import {preloadTemplates} from "./utilities/template-paths.js";
@@ -19,7 +19,7 @@ import {
   regainPoolPoints
 } from "./utilities/actor-utilities.js";
 import {sendWelcomeMessage} from "./utilities/welcome-message.js";
-import {createCyphersystemMacro} from "./utilities/create-macros.js";
+import {createFightMacro} from "./utilities/create-macros.js";
 
 // Import macros
 import {
@@ -90,7 +90,7 @@ import {
 /* -------------------------------------------- */
 
 Hooks.once("init", async function () {
-  console.log("Initializing Cypher System");
+  console.log("Initializing Fight System");
 
   // CONFIG.debug.hooks = true;
 
@@ -109,18 +109,18 @@ Hooks.once("init", async function () {
     "@uuid"
   ];
 
-  game.cyphersystem = {
+  game.Fight = {
     // Actor sheets
-    CypherActor,
-    CypherItem,
-    CypherActorSheet,
-    CypherActorSheetPC,
-    CypherActorSheetNPC,
-    CypherActorSheetCommunity,
-    CypherActorSheetCompanion,
-    CypherActorSheetVehicle,
-    CypherActorSheetMarker,
-    CypherItemSheet,
+    FightActor,
+    FightItem,
+    FightActorSheet,
+    FightActorSheetPC,
+    FightActorSheetNPC,
+    FightActorSheetCommunity,
+    FightActorSheetCompanion,
+    FightActorSheetVehicle,
+    FightActorSheetMarker,
+    FightItemSheet,
 
     // Macros
     quickRollMacro,
@@ -181,45 +181,45 @@ Hooks.once("init", async function () {
   };
 
   // Define custom Entity classes
-  CONFIG.Actor.documentClass = CypherActor;
-  CONFIG.Item.documentClass = CypherItem;
+  CONFIG.Actor.documentClass = FightActor;
+  CONFIG.Item.documentClass = FightItem;
 
   // Register sheet application classes
   foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
-  foundry.documents.collections.Actors.registerSheet("cypher", CypherActorSheetPC, {
+  foundry.documents.collections.Actors.registerSheet("Fight", FightActorSheetPC, {
     types: ['pc'],
     makeDefault: true,
-    label: "CYPHERSYSTEM.SheetClassPC"
+    label: "Fight.SheetClassPC"
   });
-  foundry.documents.collections.Actors.registerSheet("cypher", CypherActorSheetNPC, {
+  foundry.documents.collections.Actors.registerSheet("Fight", FightActorSheetNPC, {
     types: ['npc'],
     makeDefault: true,
-    label: "CYPHERSYSTEM.SheetClassNPC"
+    label: "Fight.SheetClassNPC"
   });
-  foundry.documents.collections.Actors.registerSheet("cypher", CypherActorSheetMarker, {
+  foundry.documents.collections.Actors.registerSheet("Fight", FightActorSheetMarker, {
     types: ['marker'],
     makeDefault: true,
-    label: "CYPHERSYSTEM.SheetClassToken"
+    label: "Fight.SheetClassToken"
   });
-  foundry.documents.collections.Actors.registerSheet("cypher", CypherActorSheetCommunity, {
+  foundry.documents.collections.Actors.registerSheet("Fight", FightActorSheetCommunity, {
     types: ['community'],
     makeDefault: true,
-    label: "CYPHERSYSTEM.SheetClassCommunity"
+    label: "Fight.SheetClassCommunity"
   });
-  foundry.documents.collections.Actors.registerSheet("cypher", CypherActorSheetCompanion, {
+  foundry.documents.collections.Actors.registerSheet("Fight", FightActorSheetCompanion, {
     types: ['companion'],
     makeDefault: true,
-    label: "CYPHERSYSTEM.SheetClassCompanion"
+    label: "Fight.SheetClassCompanion"
   });
-  foundry.documents.collections.Actors.registerSheet("cypher", CypherActorSheetVehicle, {
+  foundry.documents.collections.Actors.registerSheet("Fight", FightActorSheetVehicle, {
     types: ['vehicle'],
     makeDefault: true,
-    label: "CYPHERSYSTEM.SheetClassVehicle"
+    label: "Fight.SheetClassVehicle"
   });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
-  foundry.documents.collections.Items.registerSheet("cypher", CypherItemSheet, {
+  foundry.documents.collections.Items.registerSheet("Fight", FightItemSheet, {
     makeDefault: true,
-    label: "CYPHERSYSTEM.SheetClassItem"
+    label: "Fight.SheetClassItem"
   });
 
   // Load initiative settings
@@ -241,19 +241,19 @@ Hooks.once("init", async function () {
 Hooks.on("canvasReady", function (canvas) {
   console.log(`The canvas was just rendered for scene: ${canvas.scene.id}`);
   for (let t of game.scenes.viewed.tokens) {
-    if (t.getFlag("cyphersystem", "toggleDragRuler") !== undefined) {
+    if (t.getFlag("Fight", "toggleDragRuler") !== undefined) {
       // do nothing
     } else {
       if (t.actor.type !== "marker" && t.actor.type !== "vehicle") {
-        t.setFlag("cyphersystem", "toggleDragRuler", true);
+        t.setFlag("Fight", "toggleDragRuler", true);
       } else {
-        t.setFlag("cyphersystem", "toggleDragRuler", false);
+        t.setFlag("Fight", "toggleDragRuler", false);
       }
     }
   }
 
   // if (game.user.isGM) {
-  //   document.documentElement.style.setProperty('--cypher-font', 'Comic Sans MS, sans-serif');
+  //   document.documentElement.style.setProperty('--Fight-font', 'Comic Sans MS, sans-serif');
   // }
 });
 
@@ -261,7 +261,7 @@ Hooks.once("ready", async function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => {
     if (data.type === "Item") {
-      createCyphersystemMacro(data, slot);
+      createFightMacro(data, slot);
       return false;
     }
   });
@@ -270,9 +270,9 @@ Hooks.once("ready", async function () {
   await dataMigration();
 
   // Send warning for people with CSRD Compendium v3.2.0
-  if (game.modules.get("cyphersystem-compendium")?.version == "v3.2.0") {
+  if (game.modules.get("Fight-compendium")?.version == "v3.2.0") {
     ui.notifications.error(
-      "There has been a bug in the update process for the Cypher SRD Compendium. Please uninstall and reinstall the module in the Foundry setup to get the newest version. Sorry for the inconvenience! –Marko",
+      "There has been a bug in the update process for the Fight SRD Compendium. Please uninstall and reinstall the module in the Foundry setup to get the newest version. Sorry for the inconvenience! –Marko",
       {
         permanent: true,
         console: true
@@ -280,17 +280,17 @@ Hooks.once("ready", async function () {
     );
   }
 
-  // Send warning for people with cyphersheets module version 0.3.3 or lower
-  let cypherSheetsVersion = game.modules.get("cyphersheets")?.version;
-  if (cypherSheetsVersion && game.modules.get("cyphersheets")?.active) {
-    let versionParts = cypherSheetsVersion.substring(1).split(".").map(Number);
+  // Send warning for people with Fightsheets module version 0.3.3 or lower
+  let FightSheetsVersion = game.modules.get("Fightsheets")?.version;
+  if (FightSheetsVersion && game.modules.get("Fightsheets")?.active) {
+    let versionParts = FightSheetsVersion.substring(1).split(".").map(Number);
     if (
       versionParts[0] < 0 ||
       (versionParts[0] === 0 && versionParts[1] <= 3) ||
       (versionParts[0] === 0 && versionParts[1] === 3 && versionParts[2] <= 3)
     ) {
       ui.notifications.error(
-        "The Cypher System Custom Sheets module hasn’t been updated in a while and isn’t compatible with the current version of the Cypher System. Please disable the Custom Sheets module. You can customize PC sheets in the settings tab and all other sheets in the system settings. –Marko",
+        "The Fight System Custom Sheets module hasn’t been updated in a while and isn’t compatible with the current version of the Fight System. Please disable the Custom Sheets module. You can customize PC sheets in the settings tab and all other sheets in the system settings. –Marko",
         {
           permanent: true,
           console: true
@@ -300,13 +300,13 @@ Hooks.once("ready", async function () {
   }
 
   // Send welcome message
-  if (game.settings.get("cyphersystem", "welcomeMessage")) sendWelcomeMessage();
+  if (game.settings.get("Fight", "welcomeMessage")) sendWelcomeMessage();
 });
 
 Hooks.on("getSceneControlButtons", (controls) => {
   controls.tokens.tools.rollDifficulty = {
     name: "rollDifficulty",
-    title: game.i18n.localize("CYPHERSYSTEM.DifficultyControlPanel"),
+    title: game.i18n.localize("Fight.DifficultyControlPanel"),
     icon: "fa-solid fa-crosshairs-simple",
     onChange: (event, active) => {
       renderRollDifficultyForm(true);
@@ -316,7 +316,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
   if (game.user.isGM) {
     controls.tokens.tools.calculateDifficulty = {
       name: "calculateDifficulty",
-      title: game.i18n.localize("CYPHERSYSTEM.CalculateAttackDifficulty"),
+      title: game.i18n.localize("Fight.CalculateAttackDifficulty"),
       icon: "fas fa-calculator",
       onChange: (event, active) => {
         calculateAttackDifficulty();
@@ -326,7 +326,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
   }
   controls.tokens.tools.gmiRange = {
     name: "gmiRange",
-    title: game.i18n.localize("CYPHERSYSTEM.GMIRange"),
+    title: game.i18n.localize("Fight.GMIRange"),
     icon: "fas fa-exclamation-triangle",
     onChange: (event, active) => {
       gmiRangeForm();
@@ -336,7 +336,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
   if (game.user.isGM) {
     controls.tokens.tools.proposeGMI = {
       name: "proposeGMI",
-      title: game.i18n.localize("CYPHERSYSTEM.ProposeIntrusion"),
+      title: game.i18n.localize("Fight.ProposeIntrusion"),
       icon: "fas fa-bolt",
       onChange: (event, active) => {
         proposeIntrusion("", "");
@@ -384,7 +384,7 @@ Hooks.on("preCreateActor", async function (actor) {
 
 Hooks.on("updateActor", async function (actor, data, options, userId) {
   if (actor.type == "pc" && data.ownership) {
-    game.socket.emit("system.cyphersystem", {
+    game.socket.emit("system.Fight", {
       operation: "renderGMIForm"
     });
     renderGMIForm();
@@ -394,7 +394,7 @@ Hooks.on("updateActor", async function (actor, data, options, userId) {
 Hooks.on("preCreateItem", function (item, data, options, id) {
   if (item.img == "icons/svg/item-bag.svg") {
     item.updateSource({
-      img: `systems/cyphersystem/icons/items/${item.type}.svg`
+      img: `systems/Fight/icons/items/${item.type}.svg`
     });
   }
   if (
@@ -407,14 +407,14 @@ Hooks.on("preCreateItem", function (item, data, options, id) {
       "system.settings.general.unmaskedForm": "Teen"
     });
   }
-  if (item.flags.cyphersystem?.tags) {
+  if (item.flags.Fight?.tags) {
     item.updateSource({
-      "flags.cyphersystem.tags": []
+      "flags.Fight.tags": []
     });
   }
-  if (item.flags.cyphersystem?.recursions) {
+  if (item.flags.Fight?.recursions) {
     item.updateSource({
-      "flags.cyphersystem.recursions": []
+      "flags.Fight.recursions": []
     });
   }
   if (item.system?.archived || item.system?.favorite) {
@@ -474,7 +474,7 @@ Hooks.on("preCreateToken", function (document, data) {
   // Support for Bar Brawl
   if (
     game.modules.get("barbrawl")?.active &&
-    game.settings.get("cyphersystem", "barBrawlDefaults")
+    game.settings.get("Fight", "barBrawlDefaults")
   ) {
     barBrawlOverwrite(document, actor);
   }
@@ -485,10 +485,10 @@ Hooks.on("createCombatant", function (combatant) {
     let actor = combatant.actor;
 
     if (
-      game.settings.get("cyphersystem", "difficultyNPCInitiative") &&
-      game.settings.get("cyphersystem", "rollDifficulty") >= 0
+      game.settings.get("Fight", "difficultyNPCInitiative") &&
+      game.settings.get("Fight", "rollDifficulty") >= 0
     ) {
-      var NPCInitiative = game.settings.get("cyphersystem", "rollDifficulty");
+      var NPCInitiative = game.settings.get("Fight", "rollDifficulty");
     } else {
       var NPCInitiative =
         actor.type == "community"
@@ -553,11 +553,11 @@ Hooks.on("renderChatMessage", function (message, html, data) {
       html.find("div[class='chat-card-buttons']").addClass("chat-hidden");
   }
 
-  // Event Listener to confirm cypher and artifact identification
+  // Event Listener to confirm Fight and artifact identification
   html.find(".confirm").click((clickEvent) => {
     if (!game.user.isGM)
       return ui.notifications.warn(
-        game.i18n.localize("CYPHERSYSTEM.OnlyGMCanIdentify")
+        game.i18n.localize("Fight.OnlyGMCanIdentify")
       );
     let actor = game.actors.get(html.find(".confirm").data("actor"));
     let item = actor.items.get(html.find(".confirm").data("item"));
@@ -565,7 +565,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
       "system.basic.identified": true
     });
     ui.notifications.info(
-      game.i18n.format("CYPHERSYSTEM.ConfirmIdentification", {
+      game.i18n.format("Fight.ConfirmIdentification", {
         item: item.name,
         actor: actor.name
       })
@@ -577,7 +577,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     let user = html.find(".reroll-stat").data("user");
     if (user !== game.user.id)
       return ui.notifications.warn(
-        game.i18n.localize("CYPHERSYSTEM.WarnRerollUser")
+        game.i18n.localize("Fight.WarnRerollUser")
       );
     const data = html.find(".reroll-stat").data("data");
     delete data["skipDialog"];
@@ -591,7 +591,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     let user = html.find(".reroll-recovery").data("user");
     if (user !== game.user.id)
       return ui.notifications.warn(
-        game.i18n.localize("CYPHERSYSTEM.WarnRerollUser")
+        game.i18n.localize("Fight.WarnRerollUser")
       );
     let dice = html.find(".reroll-recovery").data("dice");
     let actorUuid = html.find(".reroll-recovery").data("actor-uuid");
@@ -606,7 +606,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     let user = html.find(".reroll-dice-roll").data("user");
     if (user !== game.user.id)
       return ui.notifications.warn(
-        game.i18n.localize("CYPHERSYSTEM.WarnRerollUser")
+        game.i18n.localize("Fight.WarnRerollUser")
       );
     let dice = html.find(".reroll-dice-roll").data("dice");
     diceRollMacro(dice);
@@ -617,7 +617,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     let user = html.find(".regain-points").data("user");
     if (user !== game.user.id)
       return ui.notifications.warn(
-        game.i18n.localize("CYPHERSYSTEM.WarnRerollUser")
+        game.i18n.localize("Fight.WarnRerollUser")
       );
     let actorUuid = html.find(".regain-points").data("actor-uuid");
     let actor = actorUuid.includes("Token")
@@ -682,7 +682,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     let actor = game.actors.get(html.find(".accept-intrusion").data("actor"));
     if (!actor.isOwner)
       return ui.notifications.warn(
-        game.i18n.format("CYPHERSYSTEM.IntrusionWrongPlayer", {
+        game.i18n.format("Fight.IntrusionWrongPlayer", {
           actor: actor.name
         })
       );
@@ -712,19 +712,19 @@ Hooks.on("renderChatMessage", function (message, html, data) {
 
     // Create dialog content
     let content =
-      `<div align="center"><label style="display: inline-block; text-align: right"><b>${game.i18n.localize("CYPHERSYSTEM.GiveAdditionalXPTo")}: </b></label>
+      `<div align="center"><label style="display: inline-block; text-align: right"><b>${game.i18n.localize("Fight.GiveAdditionalXPTo")}: </b></label>
     <select name="selectPC" id="selectPC" style="width: auto; margin-left: 5px; margin-bottom: 5px; text-align-last: center">` +
       list +
       `</select></div>`;
 
     // Create dialog
     let d = new Dialog({
-      title: game.i18n.localize("CYPHERSYSTEM.GiveAdditionalXP"),
+      title: game.i18n.localize("Fight.GiveAdditionalXP"),
       content: content,
       buttons: {
         apply: {
           icon: '<i class="fa-item fas fa-check"></i>',
-          label: game.i18n.localize("CYPHERSYSTEM.Apply"),
+          label: game.i18n.localize("Fight.Apply"),
           callback: (html) =>
             applyXPFromIntrusion(
               actor,
@@ -735,7 +735,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
         },
         cancel: {
           icon: '<i class="fa-item fas fa-times"></i>',
-          label: game.i18n.localize("CYPHERSYSTEM.Cancel"),
+          label: game.i18n.localize("Fight.Cancel"),
           callback: () => {}
         }
       },
@@ -756,7 +756,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     let actor = game.actors.get(html.find(".refuse-intrusion").data("actor"));
     if (!actor.isOwner)
       return ui.notifications.warn(
-        game.i18n.format("CYPHERSYSTEM.IntrusionWrongPlayer", {
+        game.i18n.format("Fight.IntrusionWrongPlayer", {
           actor: actor.name
         })
       );
@@ -765,7 +765,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
 });
 
 Hooks.once("dragRuler.ready", (SpeedProvider) => {
-  class CypherSystemSpeedProvider extends SpeedProvider {
+  class FightSpeedProvider extends SpeedProvider {
     get colors() {
       return [
         {
@@ -799,7 +799,7 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
       if (
         ["m", "meter", "metre"].includes(token.scene.grid.units) ||
         token.scene.grid.units ==
-          game.i18n.localize("CYPHERSYSTEM.UnitDistanceMeter")
+          game.i18n.localize("Fight.UnitDistanceMeter")
       ) {
         immediate = 3;
         short = 15;
@@ -808,7 +808,7 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
       } else if (
         ["ft", "ft.", "feet"].includes(token.scene.grid.units) ||
         token.scene.grid.units ==
-          game.i18n.localize("CYPHERSYSTEM.UnitDistanceFeet")
+          game.i18n.localize("Fight.UnitDistanceFeet")
       ) {
         immediate = 10;
         short = 50;
@@ -842,7 +842,7 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
     }
 
     usesRuler(token) {
-      if (token.document.flags.cyphersystem.toggleDragRuler) {
+      if (token.document.flags.Fight.toggleDragRuler) {
         return true;
       } else {
         return false;
@@ -850,13 +850,13 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
     }
   }
 
-  dragRuler.registerSystem("cyphersystem", CypherSystemSpeedProvider);
+  dragRuler.registerSystem("Fight", FightSpeedProvider);
 });
 
 Hooks.on("renderTokenConfig", function (tokenConfig, html, data) {
   if (
     game.modules.get("barbrawl")?.active &&
-    game.settings.get("cyphersystem", "barBrawlDefaults")
+    game.settings.get("Fight", "barBrawlDefaults")
   ) {
     html.find("a[data-tab='resources']").addClass("hidden");
   }
